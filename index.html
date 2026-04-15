@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CaféKit User Manual</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --espresso:    #3b1f14;
+      --mahogany:    #753d29;
+      --cream:       #f7fbff;
+      --caramel:     #c47c3e;
+      --latte:       #e8d5c0;
+      --warm-white:  #fdf8f4;
+      --muted:       #7a5c4e;
+      --border:      #e2cfc5;
+      --shadow:      rgba(59,31,20,0.10);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 14.5px;
+      color: #2c1a12;
+      background: var(--warm-white);
+      line-height: 1.75;
+    }
+
+    /* ── Cover Page ── */
+    .cover {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: linear-gradient(150deg, var(--espresso) 0%, var(--mahogany) 55%, #a85c3a 100%);
+      color: white;
+      padding: 60px 40px;
+      page-break-after: always;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 80%, rgba(196,124,62,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 20%, rgba(247,251,255,0.06) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .cover-grain {
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      opacity: 0.5;
+    }
+    .cover .logo-badge {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: rgba(247,251,255,0.88);
+      border: 2px solid rgba(247,251,255,0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 32px;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      padding: 0;
+    }
+    .cover .logo-badge img {
+      width: 78%;
+      height: 78%;
+      object-fit: contain;
+      display: block;
+      margin: auto;
+    }
+    .cover h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 56px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 6px;
+      position: relative;
+      z-index: 1;
+    }
+    .cover h1 span { color: var(--latte); }
+    .cover .subtitle { font-size: 17px; color: rgba(255,255,255,0.65); margin-bottom: 36px; font-weight: 300; letter-spacing: 0.5px; position: relative; z-index: 1; }
+    .cover .divider { width: 50px; height: 3px; background: var(--caramel); border-radius: 2px; margin: 0 auto 36px; position: relative; z-index: 1; }
+    .cover .description {
+      max-width: 540px;
+      font-size: 15px;
+      color: rgba(255,255,255,0.78);
+      line-height: 1.85;
+      margin-bottom: 48px;
+      position: relative;
+      z-index: 1;
+    }
+    .cover .meta {
+      font-size: 11.5px;
+      color: rgba(255,255,255,0.38);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Layout ── */
+    .container { max-width: 920px; margin: 0 auto; padding: 44px 30px; }
+
+    /* ── Table of Contents ── */
+    .toc-page {
+      background: white;
+      border-radius: 14px;
+      padding: 50px;
+      margin-bottom: 44px;
+      box-shadow: 0 2px 24px var(--shadow);
+      border: 1px solid var(--border);
+      page-break-after: always;
+    }
+    .toc-page h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      color: var(--espresso);
+      margin-bottom: 6px;
+    }
+    .toc-page .toc-subtitle { color: var(--muted); margin-bottom: 32px; font-size: 13px; }
+    .toc-section { margin-bottom: 20px; }
+    .toc-section .section-title {
+      font-weight: 700;
+      font-size: 13.5px;
+      color: var(--mahogany);
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toc-section .section-title .icon { font-size: 16px; }
+    .toc-items { padding: 6px 0 6px 28px; }
+    .toc-items a {
+      display: block;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 3px 0;
+      transition: color 0.15s;
+    }
+    .toc-items a:hover { color: var(--caramel); }
+
+    /* ── Section Headers ── */
+    .section-header {
+      background: linear-gradient(135deg, var(--espresso) 0%, var(--mahogany) 100%);
+      color: white;
+      padding: 28px 40px;
+      border-radius: 14px 14px 0 0;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .section-header .section-num {
+      background: var(--caramel);
+      color: white;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      flex-shrink: 0;
+      font-family: 'Playfair Display', serif;
+    }
+    .section-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .section-header p { font-size: 13px; color: rgba(255,255,255,0.65); margin-top: 2px; }
+
+    .section-body {
+      background: white;
+      padding: 42px;
+      border-radius: 0 0 14px 14px;
+      margin-bottom: 44px;
+      box-shadow: 0 4px 24px var(--shadow);
+      border: 1px solid var(--border);
+      border-top: none;
+    }
+
+    /* ── Typography ── */
+    h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--espresso);
+      margin: 34px 0 12px;
+      padding-bottom: 9px;
+      border-bottom: 2px solid var(--latte);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    h3:first-child { margin-top: 0; }
+    h3 .h3-num {
+      background: var(--mahogany);
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+      font-family: 'Source Sans 3', sans-serif;
+    }
+
+    h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--mahogany);
+      margin: 22px 0 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    p { margin-bottom: 12px; color: #3d2316; }
+
+    ul, ol { padding-left: 22px; margin-bottom: 12px; }
+    li { color: #3d2316; margin-bottom: 5px; }
+    li::marker { color: var(--caramel); }
+
+    strong { color: var(--espresso); }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 20px;
+      font-size: 13px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    thead tr { background: var(--espresso); color: white; }
+    thead th { padding: 11px 14px; text-align: left; font-weight: 600; font-size: 12px; letter-spacing: 0.3px; }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:nth-child(even) { background: var(--warm-white); }
+    tbody td { padding: 10px 14px; color: #3d2316; }
+
+    /* ── Step Cards ── */
+    .step-card {
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--mahogany);
+      border-radius: 8px;
+      padding: 18px 22px;
+      margin-bottom: 14px;
+      background: var(--warm-white);
+    }
+    .step-card .step-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--mahogany);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-bottom: 4px;
+    }
+    .step-card h5 { font-size: 15px; font-weight: 700; color: var(--espresso); margin-bottom: 6px; }
+    .step-card p { margin-bottom: 0; font-size: 13px; }
+
+    /* ── Info Boxes ── */
+    .info-box {
+      background: #f0ede8;
+      border: 1px solid var(--latte);
+      border-left: 4px solid var(--caramel);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin: 16px 0;
+      font-size: 13px;
+      color: var(--espresso);
+    }
+    .info-box strong { color: var(--espresso); }
+
+    .warning-box {
+      background: #fdf3e7;
+      border: 1px solid #f0c88a;
+      border-left: 4px solid var(--caramel);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin: 16px 0;
+      font-size: 13px;
+      color: #7a4a10;
+    }
+
+    /* ── FAQ ── */
+    .faq-item {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin-bottom: 12px;
+      background: var(--warm-white);
+    }
+    .faq-item .faq-q {
+      font-weight: 700;
+      color: var(--espresso);
+      margin-bottom: 8px;
+      font-size: 14px;
+      display: flex;
+      gap: 9px;
+    }
+    .faq-item .faq-q .q-badge {
+      background: var(--caramel);
+      color: white;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .faq-item .faq-a { color: var(--muted); font-size: 13px; padding-left: 29px; }
+
+    /* ── Role Cards ── */
+    .role-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 18px 0; }
+    .role-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      background: var(--warm-white);
+    }
+    .role-card .role-icon { font-size: 34px; margin-bottom: 10px; }
+    .role-card h4 { font-size: 14px; color: var(--espresso); text-transform: none; letter-spacing: 0; margin-bottom: 6px; }
+    .role-card p { font-size: 12px; color: var(--muted); margin-bottom: 0; }
+    .role-card.admin { border-color: var(--mahogany); background: #fdf5f0; }
+    .role-card.client { border-color: var(--caramel); background: #fdf8f0; }
+    .role-card.customer { border-color: #8a9e5a; background: #f5f8ee; }
+
+    /* ── Status Badge ── */
+    .badge {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-blue  { background: #dbeafe; color: #1e40af; }
+    .badge-green { background: #dcfce7; color: #166534; }
+    .badge-red   { background: #fee2e2; color: #991b1b; }
+    .badge-yellow{ background: #fef9c3; color: #854d0e; }
+    .badge-warm  { background: var(--latte); color: var(--espresso); }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      padding: 30px;
+      color: var(--muted);
+      font-size: 12px;
+      border-top: 1px solid var(--border);
+      margin-top: 10px;
+    }
+
+    /* ── Print ── */
+    @media print {
+      body { background: white; font-size: 12px; }
+      .cover { min-height: auto; padding: 80px 40px; }
+      .container { padding: 20px; }
+      .toc-page, .section-body { box-shadow: none; }
+      .section-body { page-break-inside: avoid; }
+      .step-card, .faq-item { page-break-inside: avoid; }
+      a { color: inherit; text-decoration: none; }
+      .print-btn { display: none; }
+    }
+
+    /* ── Print Button ── */
+    .print-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--mahogany);
+      color: white;
+      border: none;
+      padding: 12px 26px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(117,61,41,0.35);
+      z-index: 999;
+      transition: background 0.2s;
+      font-family: 'Source Sans 3', sans-serif;
+    }
+    .print-btn:hover { background: var(--espresso); }
+  </style>
+</head>
+<body>
+
+<!-- PRINT BUTTON -->
+<button class="print-btn" onclick="window.print()">Save as PDF</button>
+
+<!-- ══════════════════════════ COVER ══════════════════════════ -->
+<div class="cover">
+  <div class="cover-grain"></div>
+  <div class="logo-badge">
+    <img src="https://raw.githubusercontent.com/Czidjay/Assets/main/cafekit_logo.png" alt="CaféKit Logo" onerror="this.parentElement.innerHTML='CK'">
+  </div>
+  <h1>Café<span>Kit</span></h1>
+  <p class="subtitle">Business Café Solutions Platform</p>
+  <div class="divider"></div>
+  <p class="description">
+    Welcome to CaféKit — your all-in-one platform for launching and growing your café business.
+    This manual will guide you through every feature, from setting up your account to
+    managing orders and tracking your onboarding journey.
+  </p>
+  <p class="meta">User Manual &nbsp;·&nbsp; All Roles &nbsp;·&nbsp; March 2026</p>
+</div>
+
+<!-- ══════════════════════════ CONTAINER ══════════════════════════ -->
+<div class="container">
+
+  <!-- ── TABLE OF CONTENTS ── -->
+  <div class="toc-page">
+    <h2>Table of Contents</h2>
+    <p class="toc-subtitle">Use the sections below to jump to what you need.</p>
+
+    <div class="toc-section">
+      <div class="section-title">Section 1 — What is CaféKit?</div>
+      <div class="toc-items">
+        <a href="#s1">Platform overview and user roles</a>
+      </div>
+    </div>
+
+    <div class="toc-section">
+      <div class="section-title">Section 2 — Getting Started</div>
+      <div class="toc-items">
+        <a href="#s2">Creating your account · Logging in</a>
+      </div>
+    </div>
+
+    <div class="toc-section">
+      <div class="section-title">Section 3 — For Business Owners (Clients)</div>
+      <div class="toc-items">
+        <a href="#s3-dashboard">3.1 Your Dashboard</a>
+        <a href="#s3-onboarding">3.2 The Onboarding Journey (9 Steps)</a>
+        <a href="#s3-shopping">3.3 Shopping for Products &amp; Services</a>
+        <a href="#s3-orders">3.4 Managing Your Orders</a>
+        <a href="#s3-refunds">3.5 Cancellations &amp; Refunds</a>
+        <a href="#s3-ledger">3.6 Your Ledger (Payment History)</a>
+        <a href="#s3-messages">3.7 View Messages</a>
+        <a href="#s3-employees">3.8 Managing Employees</a>
+        <a href="#s3-profile">3.9 Your Profile</a>
+      </div>
+    </div>
+
+    <div class="toc-section">
+      <div class="section-title">Section 4 — For Administrators</div>
+      <div class="toc-items">
+        <a href="#s4-overview">4.1 Admin Dashboard Overview</a>
+        <a href="#s4-clients">4.2 Managing Clients</a>
+        <a href="#s4-workspace">4.3 Project Workspace</a>
+        <a href="#s4-products">4.4 Managing Products</a>
+        <a href="#s4-services">4.5 Managing Services</a>
+        <a href="#s4-orders">4.6 Managing Orders</a>
+        <a href="#s4-employees">4.7 Managing Employees</a>
+        <a href="#s4-content">4.8 Content &amp; Site Settings</a>
+      </div>
+    </div>
+
+    <div class="toc-section">
+      <div class="section-title">Section 5 — Frequently Asked Questions</div>
+      <div class="toc-items">
+        <a href="#s5">Common questions and answers</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ SECTION 1 ══════════════════════════ -->
+  <div id="s1">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div>
+        <h2>What is CaféKit?</h2>
+        <p>An overview of the platform and who it's for</p>
+      </div>
+    </div>
+    <div class="section-body">
+      <p>
+        <strong>CaféKit</strong> is an all-in-one business platform designed to help new café business owners
+        get started. It guides users through a complete onboarding process — from submitting business
+        documents and attending training to purchasing the necessary products and supplies.
+      </p>
+      <p>
+        Think of CaféKit as your dedicated support system. The MYO team uses the platform to review
+        submissions, schedule training, and assist clients at every stage.
+      </p>
+
+      <h3>Who Uses CaféKit?</h3>
+      <div class="role-grid">
+        <div class="role-card client">
+          <h4>Business Owner (Client)</h4>
+          <p>A new café owner going through the onboarding program.</p>
+        </div>
+        <div class="role-card customer">
+          <h4>Business Owner (Customer)</h4>
+          <p>A café owner who has completed their service and purchases products for their business.</p>
+        </div>
+        <div class="role-card admin">
+          <h4>Administrator</h4>
+          <p>MYO staff who manage clients, review submissions, schedule training, and handle orders.</p>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <strong>Note:</strong> When you register, you are automatically set up as a <strong>Business Owner</strong>.
+        You do not need to select a role manually.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ SECTION 2 ══════════════════════════ -->
+  <div id="s2">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div>
+        <h2>Getting Started</h2>
+        <p>Create your account and log in for the first time</p>
+      </div>
+    </div>
+    <div class="section-body">
+      <h3>Creating Your Account</h3>
+      <p>If you're new to CaféKit, you'll need to register first.</p>
+      <ol>
+        <li>Visit the CaféKit website and click <strong>Register</strong>.</li>
+        <li>Fill in your personal and business details:
+          <ul>
+            <li>First and last name</li>
+            <li>Email address <em>(this will be your login)</em></li>
+            <li>Password</li>
+            <li>Business name, phone number, and address</li>
+          </ul>
+        </li>
+        <li>Click <strong>Submit</strong>.</li>
+      </ol>
+
+      <h3>Logging In</h3>
+      <ol>
+        <li>Go to the CaféKit website and click <strong>Login</strong>.</li>
+        <li>Enter your <strong>email address</strong> and <strong>password</strong>.</li>
+        <li>Click <strong>Login</strong> to access your dashboard.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ SECTION 3 ══════════════════════════ -->
+  <div>
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div>
+        <h2>For Business Owners (Clients)</h2>
+        <p>Everything you need to know as a new café business owner</p>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <!-- 3.1 -->
+      <h3 id="s3-dashboard"><span class="h3-num">3.1</span> Your Dashboard</h3>
+      <p>
+        When you log in, you'll land on your <strong>Home Dashboard</strong>. This is your main hub, showing:
+      </p>
+      <ul>
+        <li>Onboarding progress</li>
+        <li>Quick access to features</li>
+      </ul>
+      <div class="info-box">
+        <strong>Note:</strong> If you have not yet availed any services offered by CaféKit, you will be instructed
+        to avail a service first before starting your onboarding process.
+      </div>
+
+      <h4>Browsing Services</h4>
+      <p>
+        Go to <strong>Place New Order</strong> to view what CaféKit offers. You can see what's included,
+        view pricing, purchase a service, and track services you've already availed.
+      </p>
+
+      <!-- 3.2 -->
+      <h3 id="s3-onboarding"><span class="h3-num">3.2</span> The Onboarding Journey (9 Steps)</h3>
+      <p>
+        The onboarding process is your guided path to launching your café. You work through the steps in order,
+        and the MYO team supports you along the way.
+      </p>
+
+      <div class="step-card">
+        <div class="step-label">Step 1</div>
+        <h5>Client Sign Up</h5>
+        <p>
+          Submit your basic business and owner information. Also submit your required compliance documents
+          and business requirements. The MYO team will review these and either <strong>approve</strong> them
+          or <strong>reject</strong> (request changes). If changes are needed, you'll see a note explaining
+          what to fix. Simply correct and resubmit.
+        </p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-label">Step 2</div>
+        <h5>Brand Making / Layout</h5>
+        <p>
+          Communicate with the MYO team regarding the branding materials using <strong>Messages</strong>.
+          Upload photos and documents showing your café's setup progress (water, electricity, interior, etc.)
+          so that the team knows that you are prepared for future training.
+        </p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-label">Step 3</div>
+        <h5>Onboarding Process</h5>
+        <p>
+          You will attend the official onboarding meeting where the MYO team will discuss your package
+          inclusions, project timeline, design process, training expectations, and important preparation
+          guidelines. After the session, you will be completing the <strong>acknowledgement form</strong>.
+        </p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-label">Step 4</div>
+        <h5>Package and Inclusions</h5>
+        <p>View the service package assigned to your business and track which inclusions have been completed.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-label">Step 5</div>
+        <h5>Café Progress &amp; Final Billing</h5>
+        <p>
+          Upload photos and documents showing your café's setup progress (water, electricity, interior, etc.)
+          and settle your final billing if you still have an outstanding balance.
+        </p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-label">Step 6</div>
+        <h5>Finalization of Training Dates</h5>
+        <p>View the training schedule agreed upon by you and the MYO team.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-label">Step 7</div>
+        <h5>Things to Prepare</h5>
+        <p>Review a checklist of everything you need to prepare before your training week begins. The checklist needs to be fulfilled before undergoing training.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-label">Step 8</div>
+        <h5>Training Week</h5>
+        <p>Attend your scheduled training sessions — either <strong>Face-to-Face</strong> or <strong>Online</strong>.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-label">Step 9</div>
+        <h5>Service Evaluation</h5>
+        <p>Complete a short evaluation form to rate your onboarding and training experience. Your feedback helps the MYO team improve its service.</p>
+      </div>
+
+      <div class="info-box">
+        <strong>What happens after Step 9?</strong> Once all steps are complete and your service payment is
+        confirmed, your account will be fully activated and you'll gain access to the CaféKit marketplace.
+      </div>
+
+      <!-- 3.3 -->
+      <h3 id="s3-shopping"><span class="h3-num">3.3</span> Shopping for Products &amp; Services</h3>
+
+      <div class="warning-box">
+        <strong>Important:</strong> You can only purchase CaféKit's offered products after your onboarding is
+        complete and your service payment has been confirmed. After this, you can no longer avail another service
+        and only the products will be available for purchase.
+      </div>
+
+      <h4>Browsing Products</h4>
+      <ol>
+        <li>From your dashboard, go to <strong>Place New Order</strong>.</li>
+        <li>Browse by category or use the <strong>search bar</strong> to find items.</li>
+        <li>Click any product to see images, description, variants, pricing, and stock status.</li>
+      </ol>
+
+      <h4>Adding Items to Your Cart</h4>
+      <ol>
+        <li>Select the variant you want (e.g., size or type).</li>
+        <li>Select quantity.</li>
+        <li>Click <strong>Add to Cart</strong>.</li>
+        <li>Click the cart icon at the top of the page to view your cart.</li>
+      </ol>
+
+      <h4>Checking Out</h4>
+      <ol>
+        <li>Review the items in your cart and click <strong>Checkout</strong>.</li>
+        <li>Enter your delivery address.</li>
+        <li>Review your order summary.</li>
+        <li>Choose a payment method: <strong>Maya</strong> or <strong>PayPal</strong>.</li>
+        <li>Tick the order <strong>Terms and Agreement</strong>.</li>
+        <li>Complete payment — you'll receive a confirmation when it goes through.</li>
+      </ol>
+
+      <!-- 3.4 -->
+      <h3 id="s3-orders"><span class="h3-num">3.4</span> Managing Your Orders</h3>
+      <p>Go to <strong>My Orders</strong> from your dashboard to see all your purchases.</p>
+
+      <h4>Order Status Guide</h4>
+      <table>
+        <thead>
+          <tr><th>Status</th><th>What It Means</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="badge badge-yellow">Pending Payment</span></td><td>Waiting for your payment to be confirmed</td></tr>
+          <tr><td><span class="badge badge-red">Payment Failed</span></td><td>Payment was not successfully processed</td></tr>
+          <tr><td><span class="badge badge-blue">Payment Confirmed</span></td><td>Your payment has been received</td></tr>
+          <tr><td><span class="badge badge-red">Payment Cancelled</span></td><td>Payment was cancelled</td></tr>
+          <tr><td><span class="badge badge-yellow">On Hold</span></td><td>Order is temporarily paused</td></tr>
+          <tr><td><span class="badge badge-blue">Processing</span></td><td>Your order is being prepared</td></tr>
+          <tr><td><span class="badge badge-blue">Ready for Shipment</span></td><td>Your order is packed and ready to ship</td></tr>
+          <tr><td><span class="badge badge-blue">Assigning Driver</span></td><td>A delivery driver is being assigned</td></tr>
+          <tr><td><span class="badge badge-blue">Waiting for Driver Pickup</span></td><td>Awaiting driver collection</td></tr>
+          <tr><td><span class="badge badge-blue">In Transit</span></td><td>Your order is on the way</td></tr>
+          <tr><td><span class="badge badge-green">Delivered</span></td><td>Your order has arrived</td></tr>
+          <tr><td><span class="badge badge-red">Delivered Failed</span></td><td>Delivery attempt was unsuccessful</td></tr>
+          <tr><td><span class="badge badge-yellow">Returned</span></td><td>Order has been sent back</td></tr>
+          <tr><td><span class="badge badge-yellow">Refund Pending</span></td><td>Refund is being processed</td></tr>
+          <tr><td><span class="badge badge-green">Refunded</span></td><td>Refund has been issued</td></tr>
+          <tr><td><span class="badge badge-red">Cancelled by Client</span></td><td>You cancelled the order</td></tr>
+          <tr><td><span class="badge badge-green">Completed</span></td><td>Order fully complete</td></tr>
+        </tbody>
+      </table>
+
+      <h4>Leaving a Review</h4>
+      <p>After your order is marked <strong>Delivered</strong>, you can share your experience:</p>
+      <ol>
+        <li>Open the order from <strong>My Orders</strong>.</li>
+        <li>Click <strong>Write a Review</strong> below each product.</li>
+        <li>Select a star rating (1–5 stars) and write your feedback.</li>
+        <li>Click <strong>Submit</strong>.</li>
+      </ol>
+
+      <!-- 3.5 -->
+      <h3 id="s3-refunds"><span class="h3-num">3.5</span> Cancellations &amp; Refunds</h3>
+
+      <div class="warning-box">
+        <strong>Important note:</strong> Cancelling an order is only valid for <strong>24 hours</strong> after
+        ordering and paying. Beyond that timeframe, you cannot cancel anymore.
+      </div>
+
+      <h4>Cancelling an Order</h4>
+      <p>You can request a cancellation before your order has been shipped.</p>
+      <ol>
+        <li>Go to <strong>My Orders</strong> and open the order.</li>
+        <li>Click <strong>Cancel Order</strong>.</li>
+        <li>Select a reason (e.g., changed my mind, found cheaper alternatives, quality concerns, etc.).</li>
+        <li>Click <strong>Submit</strong>. Wait for the refund of your cancelled order.</li>
+      </ol>
+
+      <h4>Requesting a Refund</h4>
+      <p>If there's an issue with a delivered order:</p>
+      <ol>
+        <li>Go to <strong>My Orders</strong> and open the order.</li>
+        <li>Click <strong>Request Return/Refund</strong>.</li>
+        <li>Select the items you want refunded and provide a reason.</li>
+        <li>Attach supporting photos or videos.</li>
+        <li>Click <strong>Submit</strong>.</li>
+      </ol>
+
+      <table>
+        <thead>
+          <tr><th>Refund Status</th><th>Meaning</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="badge badge-yellow">Requested</span></td><td>Your request is being reviewed by the team</td></tr>
+          <tr><td><span class="badge badge-green">Approved</span></td><td>Refund has been approved and will be processed</td></tr>
+          <tr><td><span class="badge badge-red">Rejected</span></td><td>Request was not approved (you'll see the reason)</td></tr>
+        </tbody>
+      </table>
+
+      <!-- 3.6 -->
+      <h3 id="s3-ledger"><span class="h3-num">3.6</span> Your Ledger (Payment History)</h3>
+      <p>
+        Go to <strong>Ledger</strong> to see a full history of all your transactions with CaféKit, including:
+      </p>
+      <ul>
+        <li>Payments made</li>
+        <li>Debits and credits on your account</li>
+        <li>Your current account balance</li>
+      </ul>
+      <p>This is useful for tracking your spending and verifying payments.</p>
+
+      <!-- 3.7 -->
+      <h3 id="s3-messages"><span class="h3-num">3.7</span> View Messages</h3>
+      <p>You can communicate with the MYO team through <strong>Messages</strong>.</p>
+      <ul>
+        <li>Send real-time messages</li>
+        <li>Upload images</li>
+        <li>Upload videos</li>
+      </ul>
+
+      <!-- 3.8 -->
+      <h3 id="s3-employees"><span class="h3-num">3.8</span> Managing Employees</h3>
+      <p>Go to <strong>My Employees</strong> to manage your team.</p>
+      <ul>
+        <li><strong>Add</strong> a new employee by entering their name, email, and role</li>
+        <li><strong>Edit</strong> employee details as needed</li>
+        <li><strong>Delete</strong> an employee account when no longer needed</li>
+      </ul>
+
+      <!-- 3.9 -->
+      <h3 id="s3-profile"><span class="h3-num">3.9</span> Your Profile</h3>
+      <p>
+        Go to <strong>Profile</strong> to view your personal and business information, including your
+        name, contact details, business profile, and profile picture. To make changes, use the edit
+        options on the profile page or contact the MYO team.
+      </p>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ SECTION 4 ══════════════════════════ -->
+  <div>
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div>
+        <h2>For Administrators</h2>
+        <p>Managing clients, products, orders, and platform content</p>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <!-- 4.1 -->
+      <h3 id="s4-overview"><span class="h3-num">4.1</span> Admin Dashboard Overview</h3>
+      <p>
+        When you log in as an administrator, you'll see the <strong>Admin Dashboard</strong> — your
+        control center for managing all CaféKit clients, products, services, and operations.
+      </p>
+      <p>From here you can quickly navigate to:</p>
+      <ul>
+        <li>Client management and business profiles</li>
+        <li>Analytics on Business Performance</li>
+        <li>The Project Workspace (onboarding oversight)</li>
+        <li>Product and service catalog</li>
+        <li>Order management and refunds</li>
+        <li>Reports, settings, and content</li>
+      </ul>
+
+      <!-- 4.2 -->
+      <h3 id="s4-clients"><span class="h3-num">4.2</span> Managing Clients</h3>
+      <p>Go to <strong>Business Profiles</strong> to see a list of all registered client businesses.</p>
+
+      <h4>Viewing a Client Profile</h4>
+      <p>Click on any business to see owner details, business information, assigned service, and payment/completion status.</p>
+
+      <h4>Editing a Client Profile</h4>
+      <p>From the business profile page, you can:</p>
+      <ul>
+        <li>Edit owner information (name, email, contact)</li>
+        <li>Edit business information (name, address, description)</li>
+        <li>Upload or change the business logo</li>
+      </ul>
+
+      <!-- 4.3 -->
+      <h3 id="s4-workspace"><span class="h3-num">4.3</span> Project Workspace</h3>
+      <p>
+        The <strong>Project Workspace</strong> is where you manage the entire client onboarding process.
+        It is organized into six tabs:
+      </p>
+
+      <h4>Tab 1 — Client Signup</h4>
+      <p>Review client onboarding submissions. You can search and sort, then <strong>Approve</strong> or <strong>Reject</strong> each submission. When rejecting, add a note so the client knows what to fix.</p>
+
+      <h4>Tab 2 — Store Progress</h4>
+      <p>Monitor café setup progress updates (water, electricity, interior) submitted by clients. View their uploaded documents and photos.</p>
+
+      <h4>Tab 3 — Acknowledgement Forms</h4>
+      <p>View and download acknowledgement form submissions from clients. Track which businesses have submitted their forms.</p>
+
+      <h4>Tab 4 — Package and Inclusions</h4>
+      <p>View all service package inclusions assigned to each business. Update each inclusion's status to <strong>Pending</strong> or <strong>Completed</strong> as work progresses.</p>
+
+      <h4>Tab 5 — Things to Prepare</h4>
+      <p>Manage the pre-training checklist for each business and monitor what clients still need to complete before training begins.</p>
+
+      <h4>Tab 6 — Training</h4>
+      <p>Schedule and manage training sessions:</p>
+      <ol>
+        <li>Click <strong>Add Training</strong>.</li>
+        <li>Select the business, set the training date and session number, and choose the mode (<strong>Face-to-Face</strong> or <strong>Online</strong>).</li>
+        <li>Save the session. Track status as <strong>Pending</strong> or <strong>Completed</strong>.</li>
+      </ol>
+
+      <!-- 4.4 -->
+      <h3 id="s4-products"><span class="h3-num">4.4</span> Managing Products</h3>
+
+      <h4>Product Categories</h4>
+      <p>Go to <strong>Products &gt; Categories</strong> to create, activate/deactivate, or delete categories.</p>
+
+      <h4>Products</h4>
+      <p>Go to <strong>Products &gt; All Products</strong> to:</p>
+      <ul>
+        <li>Create a product with a name, description, category, and images</li>
+        <li>Search and sort your product list</li>
+        <li>Delete products (they are hidden from clients, not permanently removed)</li>
+      </ul>
+
+      <h4>Product Variants</h4>
+      <p>
+        Each product can have multiple variants (e.g., different sizes). Open a product and go to its
+        <strong>Variants</strong> section to add variants with a name, price, weight, and stock quantity.
+        You can also activate, deactivate, or delete individual variants.
+      </p>
+
+      <!-- 4.5 -->
+      <h3 id="s4-services"><span class="h3-num">4.5</span> Managing Services</h3>
+
+      <h4>Creating a Service</h4>
+      <ol>
+        <li>Go to <strong>Services</strong> and click <strong>Add Service</strong>.</li>
+        <li>Fill in the title, description, price, and upload an image.</li>
+        <li>Click <strong>Save</strong>.</li>
+      </ol>
+
+      <h4>Service Inclusions</h4>
+      <p>Each service has a list of included items. Open a service, go to <strong>Inclusions</strong>, and add, edit, or delete inclusion items. These are what clients see and track in Step 4 of their onboarding.</p>
+
+      <!-- 4.6 -->
+      <h3 id="s4-orders"><span class="h3-num">4.6</span> Managing Orders</h3>
+      <p>Go to <strong>View Orders</strong> to view and manage all orders placed by all clients.</p>
+
+      <h4>Viewing and Updating Orders</h4>
+      <ul>
+        <li>Browse all orders, search and filter as needed</li>
+        <li>Click an order to see full details (items, pricing, delivery, payment)</li>
+        <li>Update the order status as it progresses (e.g., mark as Ready for Shipment)</li>
+      </ul>
+
+      <h4>Managing Refund Requests</h4>
+      <p>Go to <strong>Return/Refund Requests</strong> to view the orders that clients want to return/refund.</p>
+      <ol>
+        <li>Open an order that has a refund request.</li>
+        <li>Review the reason and the attached evidence.</li>
+        <li>Click <strong>Approve</strong> or <strong>Reject</strong>.</li>
+      </ol>
+
+      <!-- 4.7 -->
+      <h3 id="s4-employees"><span class="h3-num">4.7</span> Managing Employees</h3>
+      <p>Go to <strong>My Employees</strong> to manage your team.</p>
+      <ul>
+        <li><strong>Add</strong> a new employee by entering their name, email, and role</li>
+        <li><strong>Edit</strong> employee details as needed</li>
+        <li><strong>Delete</strong> an employee account when no longer needed</li>
+      </ul>
+
+      <!-- 4.8 -->
+      <h3 id="s4-content"><span class="h3-num">4.8</span> Content &amp; Site Settings</h3>
+
+      <h4>Blog Management</h4>
+      <p>Go to <strong>Blog</strong> to create, edit, and delete blog posts. You can also manage blog categories to keep your content organized.</p>
+
+      <h4>Media Assets</h4>
+      <p>Go to <strong>Assets</strong> to upload, view, and manage images and files used across the site.</p>
+
+      <h4>Site Settings</h4>
+      <p>Go to <strong>Site Settings</strong> to configure:</p>
+      <table>
+        <thead>
+          <tr><th>Setting</th><th>What It Does</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Company Logo</td><td>Update the logo shown across the website</td></tr>
+          <tr><td>How It Works</td><td>Edit the step-by-step guide shown on the public homepage</td></tr>
+          <tr><td>FAQ</td><td>Add, edit, or remove frequently asked questions for visitors</td></tr>
+          <tr><td>Top Banner</td><td>Set a banner message displayed to all visitors</td></tr>
+          <tr><td>Address &amp; Coordinates</td><td>Update your business location information</td></tr>
+          <tr><td>VAT / Tax Settings</td><td>Configure tax rates applied to orders</td></tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ SECTION 5 ══════════════════════════ -->
+  <div id="s5">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div>
+        <h2>Frequently Asked Questions</h2>
+        <p>Quick answers to common questions</p>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="faq-item">
+        <div class="faq-q"><span class="q-badge">Q</span> I just registered. What should I do first?</div>
+        <div class="faq-a">After registering, you'll be taken to your onboarding dashboard. Start with <strong>Step 1 (Client Sign Up)</strong> and work your way through each step in order. The platform will guide you.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q"><span class="q-badge">Q</span> I submitted a document but it was rejected. What do I do?</div>
+        <div class="faq-a">Check the admin's note on the rejected submission — it will explain what needs to be corrected. Make the necessary changes and resubmit. The MYO team will review it again.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q"><span class="q-badge">Q</span> Why can't I see products in the marketplace?</div>
+        <div class="faq-a">The marketplace is only unlocked after you have completed all onboarding steps <strong>and</strong> your service payment has been confirmed. If you believe your account should already be active, contact the MYO team.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q"><span class="q-badge">Q</span> How do I know when my order is coming?</div>
+        <div class="faq-a">Go to <strong>My Orders</strong> and click on your order to see its current status. The status tracker will show you exactly where your order is in the process — from preparation all the way to delivery.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q"><span class="q-badge">Q</span> I want to cancel my order. Is it too late?</div>
+        <div class="faq-a">Cancellations are only valid within <strong>24 hours</strong> of ordering and paying. If that window has passed, you will need to request a refund after delivery instead.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q"><span class="q-badge">Q</span> How do I contact the MYO team?</div>
+        <div class="faq-a">You can reach the team through the <strong>Messages</strong> section in your dashboard, or by using the <strong>Contact Us</strong> page on the CaféKit website.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q"><span class="q-badge">Q</span> (Admin) How do I schedule a training session for a client?</div>
+        <div class="faq-a">Go to the <strong>Project Workspace</strong>, click the <strong>Training</strong> tab, then click <strong>Add Training</strong>. Select the business, set the date, session number, and training mode (Face-to-Face or Online), then save.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q"><span class="q-badge">Q</span> (Admin) I deleted a product but it still shows in my records. Why?</div>
+        <div class="faq-a">Products are <strong>soft-deleted</strong> — they are hidden from clients but kept in the system for record-keeping purposes. This protects the integrity of past orders and data.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p><strong>CaféKit</strong> — User Manual &nbsp;·&nbsp; All Roles &nbsp;·&nbsp; March 2026</p>
+    <p>For further assistance, contact the MYO support team through your dashboard or the website's Contact Us page.</p>
+  </div>
+
+</div>
+</body>
+</html>
